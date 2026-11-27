@@ -7,19 +7,36 @@ class StudyPlanner extends StatefulWidget {
 }
 class _StudyPlannerState extends State<StudyPlanner> {
   // LOGIC
-  List goals = [
+  List<Map<String, dynamic>> goals = [
     {'subject': 'Mobile App Development', 'hours': 3, 'done': false},
     {'subject': 'Cloud Computing', 'hours': 2, 'done': false},
     {'subject': 'Mobile Communication', 'hours': 2, 'done': false},
   ];
+
+  // LOGIC - Functions
+  void toggleGoal(int i, bool? value) {
+    setState(() => goals[i]['done'] = value);
+  }
+
+  void deleteGoal(int i) {
+    setState(() => goals.removeAt(i));
+  }
+
+  void addGoal() {
+    setState(() {
+      goals.add({'subject': 'New Subject', 'hours': 2, 'done': false});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
-  title: const Text('My Study Planner'),
-  backgroundColor: Colors.blue,
-  foregroundColor: Colors.white,
-),
+      // STATIC - AppBar
+      appBar: AppBar(
+        title: const Text('My Study Planner'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
       // CONNECTION
       body: ListView.builder(
         itemCount: goals.length,
@@ -35,18 +52,16 @@ class _StudyPlannerState extends State<StudyPlanner> {
             subtitle: Text('${goals[i]['hours']} hours'),
             secondary: IconButton(
               icon: const Icon(Icons.delete),
-              onPressed: () => setState(() => goals.removeAt(i)),
+              onPressed: () => deleteGoal(i),
             ),
-            onChanged: (v) => setState(() => goals[i]['done'] = v),
+            onChanged: (v) => toggleGoal(i, v),
           );
         },
       ),
       // CONNECTION
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => setState(
-          () => goals.add({'subject': 'New Subject', 'hours': 2, 'done': false}),
-        ),
+        onPressed: addGoal,
       ),
     );
   }
